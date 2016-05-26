@@ -66,15 +66,16 @@ WHERE Authors.birthdate IN (
     Title.title_id = Publication_content.title_id AND
     Publications.publication_id = Publication_content.publication_id AND
     Publications.publication_pages >= 100;
-    
 
--- query e: For every publisher, calculate the average price of its published novels (the ones that have a dollar price).
--- A group by has been added at the end so that we get the individual average for each publisher
-SELECT Publisher.publisher_id , AVG(Publications.price_value)
-FROM Publications, Publisher
-WHERE Publisher.publisher_id = Publications.publisher_id AND
-      Publications.price_currency = '$'
-GROUP BY Publisher.publisher_id;
+
+    -- query e: For every publisher, calculate the average price of its published novels (the ones that have a dollar price).
+    -- A group by has been added at the end so that we get the individual average for each publisher
+    -- tested with sql developer
+    SELECT Publisher.publisher_id , AVG(Publications.price_value)
+    FROM Publications, Publisher
+    WHERE Publisher.publisher_id = Publications.publisher_id AND
+          Publications.price_currency = '$'
+    GROUP BY Publisher.publisher_id;
 
 -- query f: What is the name of the author with the highest number of titles that are tagged as “science fiction”?
 -- tested with sql developer
