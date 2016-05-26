@@ -41,24 +41,32 @@ WHERE Authors.birthdate IN (
 );
 
 -- query d: How many comics (graphic titles) have publications with less than 50 pages, less than 100 pages, and more (or equal) than 100 pages?
--- changes made: Distinct was removed. Data cleaning has been made on roman numerals in order to be able to count the pages properly
-SELECT less_than_fifty, less_than_hundred, COUNT(Publications.publication_id) - less_than_hundred
-FROM (
-    SELECT COUNT ( * ) as less_than_fifty
+-- tested with sql developer
+
+    -- less than fifty pages
+    SELECT COUNT ( Publications.publication_id )
     FROM Title, Publication_content, Publications
     WHERE Title.title_graphic = 'YES' AND
     Title.title_id = Publication_content.title_id AND
     Publications.publication_id = Publication_content.publication_id AND
-    Publications.publication_pages < 50
-    ),
-    (
-    SELECT COUNT ( * ) as less_than_hundred
+    Publications.publication_pages < 50;
+
+     -- less than one hundred pages
+    SELECT COUNT ( Publications.publication_id )
     FROM Title, Publication_content, Publications
     WHERE Title.title_graphic = 'YES' AND
     Title.title_id = Publication_content.title_id AND
     Publications.publication_id = Publication_content.publication_id AND
-    Publications.publication_pages < 100
-    );
+    Publications.publication_pages < 100;
+
+     -- more or equal to one hundred pages
+    SELECT COUNT ( Publications.publication_id )
+    FROM Title, Publication_content, Publications
+    WHERE Title.title_graphic = 'YES' AND
+    Title.title_id = Publication_content.title_id AND
+    Publications.publication_id = Publication_content.publication_id AND
+    Publications.publication_pages >= 100;
+    
 
 -- query e: For every publisher, calculate the average price of its published novels (the ones that have a dollar price).
 -- A group by has been added at the end so that we get the individual average for each publisher
