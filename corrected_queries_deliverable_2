@@ -4,10 +4,8 @@ SELECT EXTRACT (YEAR FROM Publications.publication_date), COUNT(Publications.pub
 FROM Publications
 GROUP BY EXTRACT (YEAR FROM Publications.publication_date);
 
---query b: Output the names of the ten authors with most publications
---changes made: Group by ids instead of group by name in case there are authors
---with the same name
---nested query which gets the ids of top 10 authors (optimization)
+-- query b: Output the names of the ten authors with most publications
+-- tested with sql developer
 SELECT authors_number_publications.a_name
 FROM (
     SELECT Authors.author_id, Authors.a_name, COUNT(*) as pubs
