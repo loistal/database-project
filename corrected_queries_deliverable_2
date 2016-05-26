@@ -21,6 +21,7 @@ WHERE ROWNUM <= 10;
 -- changes made:
 -- Instead of considering only the year, the day and the month are also included.
 -- Note: there are more than 2 names because these authors have the same birthdate
+-- tested with sql developer
 SELECT Authors.a_name
 FROM Authors
 WHERE Authors.birthdate IN (
@@ -37,7 +38,7 @@ WHERE Authors.birthdate IN (
         WHERE Publication_authors.author_id = Authors.author_id AND
         Publication_authors.publication_id = Publications.publication_id AND
         EXTRACT (YEAR FROM Publications.publication_date) = 2010
-    );
+);
 
 -- query d: How many comics (graphic titles) have publications with less than 50 pages, less than 100 pages, and more (or equal) than 100 pages?
 -- changes made: Distinct was removed. Data cleaning has been made on roman numerals in order to be able to count the pages properly
