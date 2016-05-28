@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/DBMSInterface.iml" filepath="$PROJECT_DIR$/DBMSInterface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DBMSinterface.iml" filepath="$PROJECT_DIR$/DBMSinterface.iml" />
     </modules>
   </component>
 </project>

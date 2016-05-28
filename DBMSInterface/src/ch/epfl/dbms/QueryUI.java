@@ -86,7 +86,7 @@ public class QueryUI {
                 }
             }
         } catch (Exception e) {
-            //meh
+            e.printStackTrace();
         }
 
         display();

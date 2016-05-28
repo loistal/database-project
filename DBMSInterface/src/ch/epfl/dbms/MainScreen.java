@@ -16,12 +16,8 @@ public class MainScreen {
 
 
     public MainScreen() {
-        queriesButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                QueryUI.display();
-            }
-        });
+        queriesButton.addActionListener(actionEvent -> QueryUI.display());
+        insertButton.addActionListener(actionEvent -> InsertUI.display());
     }
 
     public static void main(String[] args) {
@@ -33,7 +29,7 @@ public class MainScreen {
                 }
             }
         } catch (Exception e) {
-            //meh
+            e.printStackTrace();
         }
 
         new Thread(() -> {
