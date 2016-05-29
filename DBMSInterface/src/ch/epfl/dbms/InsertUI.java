@@ -1,8 +1,15 @@
 package ch.epfl.dbms;
 
+import sun.applet.Main;
+
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.datatransfer.SystemFlavorMap;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Created by titoy on 5/28/16.
@@ -33,7 +40,7 @@ public class InsertUI {
     }
 
     /**
-     * Sets the possible values for the spinner
+     * Sets the possible values for the spinner, and sets a listener
      */
     private void configureSpinner() {
         String[] tableNames = {
@@ -42,6 +49,35 @@ public class InsertUI {
         };
         SpinnerListModel tableModel = new SpinnerListModel(tableNames);
         table .setModel(tableModel);
+
+        table.addChangeListener(
+                e -> initFormForTable((String)table.getValue())
+        );
+    }
+
+    //Change the form in order to have the right fields and labels
+    private void initFormForTable(String tableName) {
+
+        // Get the number of columns in the table
+        ResultSet resultSet = MainScreen.sqlProvider.query(
+                /**
+                "SELECT COUNT(*)" +
+                "FROM " + tableName + ".COLUMNS" +
+                "WHERE TABLE_NAME = " + tableName
+                 **/
+                "SELECT COUNT(*)"
+                + "FROM Publications"
+        );
+
+        try {
+            while (resultSet.next()) {
+                //String numberColumns = resultSet.getString("COUNT(*)");
+                String result = resultSet.getString("COUNT(*)");
+                System.out.print("Number of rows in " + tableName + " = " + result);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

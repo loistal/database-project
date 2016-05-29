@@ -20,7 +20,7 @@ public class MainScreen {
 
     public MainScreen() {
 
-        //sqlProvider = new SQLProvider();
+        sqlProvider = new SQLProvider();
 
         queriesButton.addActionListener(actionEvent -> QueryUI.display());
         insertButton.addActionListener(actionEvent -> InsertUI.display());

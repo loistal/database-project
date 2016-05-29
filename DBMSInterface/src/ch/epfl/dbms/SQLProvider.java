@@ -5,7 +5,7 @@ import java.sql.*;
 public class SQLProvider {
     private static String JDBC_URL = "jdbc:oracle:thin:@diassrv2.epfl.ch:1521:orcldias";
     private static String USERNAME = "DB2016_G23";
-    private static String PASSWORD = "DB2016_G23";
+    private static String PASSWORD = "db2016_G23_pwd";
 
     static {
         try {
