@@ -1,6 +1,7 @@
 package ch.epfl.dbms;
 
 import javax.swing.*;
+import java.awt.*;
 import java.sql.SQLException;
 
 /**
@@ -17,12 +18,7 @@ public class InsertUI {
 
        // });
 
-        String[] tableNames = {
-                "Authors",
-                "Publications"
-        };
-        SpinnerListModel tableModel = new SpinnerListModel(tableNames);
-        table .setModel(tableModel);
+        configureSpinner();
     }
 
     public static void display() {
@@ -30,9 +26,22 @@ public class InsertUI {
             InsertUI insertUI = new InsertUI();
             frame.setContentPane(insertUI.insertPanel);
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            frame.setPreferredSize(new Dimension(720, 480));
             frame.pack();
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
+    }
+
+    /**
+     * Sets the possible values for the spinner
+     */
+    private void configureSpinner() {
+        String[] tableNames = {
+                "Authors",
+                "Publications"
+        };
+        SpinnerListModel tableModel = new SpinnerListModel(tableNames);
+        table .setModel(tableModel);
     }
 
 }

@@ -1,13 +1,15 @@
 package ch.epfl.dbms;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Created by tobias on 11/05/16.
  */
 public class MainScreen {
+
+    // provider used throughout the program
+    public static SQLProvider sqlProvider;
+
     private JPanel mainPanel;
     private JButton queriesButton;
     private JButton searchButton;
@@ -15,7 +17,11 @@ public class MainScreen {
     private JButton insertButton;
 
 
+
     public MainScreen() {
+
+        //sqlProvider = new SQLProvider();
+
         queriesButton.addActionListener(actionEvent -> QueryUI.display());
         insertButton.addActionListener(actionEvent -> InsertUI.display());
     }
