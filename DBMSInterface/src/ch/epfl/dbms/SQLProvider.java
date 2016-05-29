@@ -7,6 +7,9 @@ public class SQLProvider {
     private static String USERNAME = "DB2016_G23";
     private static String PASSWORD = "db2016_G23_pwd";
 
+    //TODO: remove after testing
+    public static Connection connection;
+
     static {
         try {
             DriverManager.registerDriver (new oracle.jdbc.OracleDriver());
@@ -15,7 +18,8 @@ public class SQLProvider {
         }
     }
 
-    private Connection connection;
+    //TODO: uncomment when finished testing
+    //private Connection connection;
 
     public SQLProvider() {
         try {
