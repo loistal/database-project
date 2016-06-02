@@ -59,7 +59,21 @@ public class InsertUI {
     private void configureSpinner() {
         String[] tableNames = {
                 "Publication_series",
-                "Publications"
+                "Publications",
+                "Authors",
+                "Languages",
+                "Tags",
+                "Notes",
+                "Title_series",
+                "Reviews",
+                "Title_awards",
+                "Title_tags",
+                "Publications",
+                "Publication_authors",
+                "Publication_content",
+                "Publication_series",
+                "Publisher",
+                "Awards",
         };
         SpinnerListModel tableModel = new SpinnerListModel(tableNames);
         table .setModel(tableModel);
@@ -117,9 +131,11 @@ public class InsertUI {
                 }
             }
 
-            int affectedRow = MainScreen.sqlProvider.update(query);
-            if(affectedRow < 0) {
-                System.out.println("Error while updating the database");
+            try {
+                MainScreen.sqlProvider.update(query);
+                columnName.setText("Insertion was performed successfully!");
+            } catch (SQLException e) {
+                columnName.setText("Error while updating the database: " + e.toString());
             }
 
             //debug

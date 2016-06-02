@@ -46,18 +46,12 @@ public class SQLProvider {
      * Use this method for INSERTS / DELETES
      * @return The index of the affected row
      */
-    public int update(String updateQuery) {
+    public int update(String updateQuery) throws SQLException {
         Statement statement;
 
-        try {
             statement = connection.createStatement();
             int affectedRow = statement.executeUpdate(updateQuery);
             return affectedRow;
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
-
-        return -1;
     }
 
     public void close() {
