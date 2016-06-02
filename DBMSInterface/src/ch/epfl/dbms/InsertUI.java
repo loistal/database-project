@@ -53,25 +53,8 @@ public class InsertUI {
      * Sets the possible values for the spinner, and sets a listener
      */
     private void configureSpinner() {
-        String[] tableNames = {
-                "Publication_series",
-                "Publications",
-                "Authors",
-                "Languages",
-                "Tags",
-                "Notes",
-                "Title_series",
-                "Reviews",
-                "Title_awards",
-                "Title_tags",
-                "Publications",
-                "Publication_authors",
-                "Publication_content",
-                "Publication_series",
-                "Publisher",
-                "Awards",
-        };
-        SpinnerListModel tableModel = new SpinnerListModel(tableNames);
+
+        SpinnerListModel tableModel = new SpinnerListModel(MainScreen.tableNames);
         table .setModel(tableModel);
 
         table.addChangeListener(

@@ -16,7 +16,24 @@ public class MainScreen {
     private JButton deleteButton;
     private JButton insertButton;
 
-
+    static String[] tableNames = {
+            "Publication_series",
+            "Publications",
+            "Authors",
+            "Languages",
+            "Tags",
+            "Notes",
+            "Title_series",
+            "Reviews",
+            "Title_awards",
+            "Title_tags",
+            "Publications",
+            "Publication_authors",
+            "Publication_content",
+            "Publication_series",
+            "Publisher",
+            "Awards",
+    };
 
     public MainScreen() {
 
