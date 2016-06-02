@@ -30,7 +30,7 @@ public class SQLProvider {
     }
 
     public ResultSet query(String query) {
-        Statement stmt = null;
+        Statement stmt;
         try {
             stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(query);
@@ -40,6 +40,24 @@ public class SQLProvider {
         }
 
         return null;
+    }
+
+    /**
+     * Use this method for INSERTS / DELETES
+     * @return The index of the affected row
+     */
+    public int update(String updateQuery) {
+        Statement statement;
+
+        try {
+            statement = connection.createStatement();
+            int affectedRow = statement.executeUpdate(updateQuery);
+            return affectedRow;
+        } catch (SQLException e){
+            System.err.println("Error while updating database");
+        }
+
+        return -1;
     }
 
     public void close() {

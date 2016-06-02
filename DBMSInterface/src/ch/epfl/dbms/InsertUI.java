@@ -1,13 +1,13 @@
 package ch.epfl.dbms;
 
-import sun.applet.Main;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.binding.StringBinding;
 
 import javax.swing.*;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
@@ -30,7 +30,7 @@ public class InsertUI {
     // number of columns of the current table
     private int numberOfColumns;
 
-    ArrayList fields;
+    private ArrayList fields;
 
     public InsertUI() {
 
@@ -104,8 +104,35 @@ public class InsertUI {
         // The user just finished entering all the fields
         if(currentField == numberOfColumns) {
 
-            //TODO
+            fields.add(value.getText());
+
+            String query = "INSERT INTO " + table.getValue() + " VALUES (";
+
+            for(int i = 0; i < fields.size(); i++) {
+
+                if(i == fields.size() - 1) {
+                    query += (fields.get(i) + ");");
+                } else {
+                    query += (fields.get(i) + ", ");
+                }
+            }
+
+            ResultSet resultSet = MainScreen.sqlProvider.query(query);
+
+            try {
+
+                resultSetMetaData = resultSet.getMetaData();
+                System.out.println("Insert result" + resultSetMetaData.toString());
+
+            } catch (SQLException e ) {
+                e.printStackTrace();
+            }
+
+            //debug
             System.out.println("All fields inserted!");
+            System.out.println("Inputs: ");
+            System.out.println(fields);
+            System.out.println(query);
 
         } else {
 
