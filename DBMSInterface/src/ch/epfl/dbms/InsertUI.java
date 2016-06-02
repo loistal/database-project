@@ -111,25 +111,18 @@ public class InsertUI {
             for(int i = 0; i < fields.size(); i++) {
 
                 if(i == fields.size() - 1) {
-                    query += (fields.get(i) + ");");
+                    query += "\'"+ fields.get(i) + "\'" + ")";
                 } else {
-                    query += (fields.get(i) + ", ");
+                    query += "\'"+ fields.get(i) + "\'" + ",";
                 }
             }
 
-            ResultSet resultSet = MainScreen.sqlProvider.query(query);
-
-            try {
-
-                resultSetMetaData = resultSet.getMetaData();
-                System.out.println("Insert result" + resultSetMetaData.toString());
-
-            } catch (SQLException e ) {
-                e.printStackTrace();
+            int affectedRow = MainScreen.sqlProvider.update(query);
+            if(affectedRow < 0) {
+                System.out.println("Error while updating the database");
             }
 
             //debug
-            System.out.println("All fields inserted!");
             System.out.println("Inputs: ");
             System.out.println(fields);
             System.out.println(query);

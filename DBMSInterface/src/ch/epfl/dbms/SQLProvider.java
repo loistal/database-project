@@ -54,7 +54,7 @@ public class SQLProvider {
             int affectedRow = statement.executeUpdate(updateQuery);
             return affectedRow;
         } catch (SQLException e){
-            System.err.println("Error while updating database");
+            e.printStackTrace();
         }
 
         return -1;
