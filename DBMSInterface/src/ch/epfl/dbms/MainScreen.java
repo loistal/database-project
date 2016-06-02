@@ -24,6 +24,7 @@ public class MainScreen {
 
         queriesButton.addActionListener(actionEvent -> QueryUI.display());
         insertButton.addActionListener(actionEvent -> InsertUI.display());
+        searchButton.addActionListener(actionEvent -> SearchUI.display());
     }
 
     public static void main(String[] args) {

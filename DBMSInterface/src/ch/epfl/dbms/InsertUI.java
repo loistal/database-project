@@ -1,8 +1,5 @@
 package ch.epfl.dbms;
 
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.binding.StringBinding;
-
 import javax.swing.*;
 import java.awt.*;
 import java.sql.ResultSet;
@@ -20,7 +17,6 @@ public class InsertUI {
     private JTextField value;
     private JLabel columnName;
     private JButton OKButton;
-    private static JFrame frame;
 
     private ResultSetMetaData resultSetMetaData;
 
@@ -30,9 +26,9 @@ public class InsertUI {
     // number of columns of the current table
     private int numberOfColumns;
 
-    private ArrayList fields;
+    private ArrayList<String> fields;
 
-    public InsertUI() {
+    private InsertUI() {
 
         fields = new ArrayList();
 
@@ -42,8 +38,8 @@ public class InsertUI {
 
     }
 
-    public static void display() {
-            frame = new JFrame("Insert");
+    static void display() {
+            JFrame frame = new JFrame("Insert");
             InsertUI insertUI = new InsertUI();
             frame.setContentPane(insertUI.mPanel);
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
