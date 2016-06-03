@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 
 /**
  * Created by titoy on 6/2/16.
@@ -36,105 +37,67 @@ public class SearchUI {
 
     /**
      * Searches the keywords in every single column of every single table
-     * @param keywords
+     * @param keywords The keyword which the user typed inside the text field
      */
     private void search(String keywords) {
 
-        // for each table
-        //for (int i = 0; i < MainScreen.tableNames.length; i++) {
-
+        //for each table
+        for (int t = 0; t < MainScreen.tableNames.length; t++)
             try {
-                // do a query to get the resultSet
+                // Get number of columns
                 ResultSet resultSet = MainScreen.sqlProvider.query(
-                        "select * from Publication_series"
+                        "select * from " + MainScreen.tableNames[t]
                 );
-
                 ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
                 int numberColumns = resultSetMetaData.getColumnCount();
 
-                System.out.println("Number of columns in Publication_series is " + numberColumns);
+                // Look for the keywords in each column
+                for (int i = 0; i < numberColumns; i++) {
 
-                // for all the columns in the table
-                for(int i = 0; i < numberColumns; i++) {
                     ResultSet resultSetColumn = null;
-
-                    String query = "SELECT * FROM Publication_series WHERE Publication_series."
-                            + resultSetMetaData.getColumnName(i + 1) + " LIKE "
-                            + "'%" + keywords + "%'";
-
-                    //int type = resultSetMetaData.getColumnType(1);
-
                     if (resultSetMetaData.getColumnType(i + 1) == Types.VARCHAR) {
                         resultSetColumn = MainScreen.sqlProvider.query(
-                                query
+                                "SELECT * FROM " + MainScreen.tableNames[t]
+                                        + " WHERE " + MainScreen.tableNames[t] + "."
+                                        + resultSetMetaData.getColumnName(i + 1) + " LIKE "
+                                        + "'%" + keywords + "%'"
                         );
                     }
 
-                    //ResultSet resultSet1 = resultSetColumn;
-
-                    // display result
+                    // Save the results for later use
+                    ArrayList<ArrayList<String>> allResults = new ArrayList<>();
                     if (resultSetColumn != null) {
                         while (resultSetColumn.next()) {
+                            ArrayList<String> row = new ArrayList<>();
                             for (int k = 0; k < numberColumns; k++) {
-                                System.out.print(resultSetColumn.getString(k + 1) + " ");
+                                row.add(resultSetColumn.getString(k + 1));
                             }
-                            System.out.println();
+                            allResults.add(row);
                         }
-                    } else {
-                        System.out.print("result set is null");
                     }
+
+                    // do stuff with results
+                    for(ArrayList<String> row: allResults) {
+                        System.out.println(row);
+                    }
+
                 }
-
-                /**
-                    // for each column of the table, look for the keywords
-                    for (int j = 0; j < numberColumns; j++) {
-
-                        ResultSet resultSetColumn = null;
-
-                        if(keywords instanceof Integer && resultSetMetaData.getColumnType(j + 1) == Types.INTEGER) {
-                            resultSetColumn = MainScreen.sqlProvider.query(
-                                    "SELECT * FROM Publication_series WHERE "
-                                            + resultSetMetaData.getColumnName(j + 1) + " = " + keywords
-                            );
-                        } else if(keywords instanceof String && (resultSetMetaData.getColumnType(j + 1) == Types.VARCHAR
-                        || resultSetMetaData.getColumnType(j + 1) == Types.CHAR)) {
-                            resultSetColumn = MainScreen.sqlProvider.query(
-                                    "SELECT * FROM Publication_series WHERE "
-                                            + resultSetMetaData.getColumnName(j + 1) + " = " + "\'" + keywords + "\'"
-                            );
-                        }
-
-                        if(resultSetColumn != null) {
-                            while (resultSetColumn.next()) {
-                                for (int k = 0; k < numberColumns; k++) {
-                                    System.out.print(resultSetColumn.getString(k + 1) + " ");
-                                }
-                                System.out.println();
-                            }
-                        }
-
-                    }
-                 **/
-
 
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
-
-        //}
     }
 
     /**
      * Used to test whether the input provided in the search box is a number
-     * @param str
-     * @return
+     * @param str The string to be tested
+     * @return Whether or not the string is a number
      */
     public static boolean isNumeric(String str)
     {
         try
         {
-            double d = Double.parseDouble(str);
+            Double.parseDouble(str);
         }
         catch(NumberFormatException nfe)
         {
