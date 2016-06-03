@@ -7,6 +7,7 @@ import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 
 /**
  * Created by titoy on 6/2/16.
@@ -42,40 +43,100 @@ public class SearchUI {
     private void search(String keywords) {
 
         // for each table
-        for (int i = 0; i < MainScreen.tableNames.length; i++) {
+        //for (int i = 0; i < MainScreen.tableNames.length; i++) {
 
             try {
                 // do a query to get the resultSet
                 ResultSet resultSet = MainScreen.sqlProvider.query(
-                        "select count(*) from " + MainScreen.tableNames[i]
+                        "select * from Publication_series"
                 );
 
                 ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
                 int numberColumns = resultSetMetaData.getColumnCount();
 
-                try {
+                System.out.println("Number of columns in Publication_series is " + numberColumns);
+
+                ResultSet resultSetColumn = null;
+
+                String query = "SELECT * FROM Publication_series WHERE Publication_series." + resultSetMetaData.getColumnName(1) + " = " + keywords;
+
+                int type = resultSetMetaData.getColumnType( 1);
+
+                if(isNumeric(keywords) && resultSetMetaData.getColumnType( 1) == Types.VARCHAR) {
+                    resultSetColumn = MainScreen.sqlProvider.query(
+                            query
+                    );
+                }
+
+                ResultSet resultSet1 = resultSetColumn;
+
+                if(resultSetColumn != null) {
+                    while (resultSetColumn.next()) {
+                        for (int k = 0; k < numberColumns; k++) {
+                            System.out.print(resultSetColumn.getString(k + 1) + " ");
+                        }
+                        System.out.println();
+                    }
+                } else {
+                    System.out.print("result set is null");
+                }
+
+                /**
                     // for each column of the table, look for the keywords
                     for (int j = 0; j < numberColumns; j++) {
 
-                        ResultSet resultSetColumn = MainScreen.sqlProvider.query(
-                                "SELECT * FROM " + MainScreen.tableNames[i] + " WHERE "
-                                        + resultSetMetaData.getColumnName(j + 1) + " = " + keywords
-                        );
+                        ResultSet resultSetColumn = null;
+
+                        if(keywords instanceof Integer && resultSetMetaData.getColumnType(j + 1) == Types.INTEGER) {
+                            resultSetColumn = MainScreen.sqlProvider.query(
+                                    "SELECT * FROM Publication_series WHERE "
+                                            + resultSetMetaData.getColumnName(j + 1) + " = " + keywords
+                            );
+                        } else if(keywords instanceof String && (resultSetMetaData.getColumnType(j + 1) == Types.VARCHAR
+                        || resultSetMetaData.getColumnType(j + 1) == Types.CHAR)) {
+                            resultSetColumn = MainScreen.sqlProvider.query(
+                                    "SELECT * FROM Publication_series WHERE "
+                                            + resultSetMetaData.getColumnName(j + 1) + " = " + "\'" + keywords + "\'"
+                            );
+                        }
+
+                        if(resultSetColumn != null) {
+                            while (resultSetColumn.next()) {
+                                for (int k = 0; k < numberColumns; k++) {
+                                    System.out.print(resultSetColumn.getString(k + 1) + " ");
+                                }
+                                System.out.println();
+                            }
+                        }
 
                     }
-                } catch (SQLException e) {
-                    // The exceptions will be due to querying for keywords which don't
-                    // correspond the the type of that column.
-                    // In this case do nothing (could check type of input vs column type but
-                    // let's save time).
-                }
+                 **/
+
 
             } catch (SQLException e) {
                 e.printStackTrace();
             }
 
 
+        //}
+    }
+
+    /**
+     * Used to test whether the input provided in the search box is a number
+     * @param str
+     * @return
+     */
+    public static boolean isNumeric(String str)
+    {
+        try
+        {
+            double d = Double.parseDouble(str);
         }
+        catch(NumberFormatException nfe)
+        {
+            return false;
+        }
+        return true;
     }
 
 
