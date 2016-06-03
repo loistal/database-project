@@ -1,7 +1,5 @@
 package ch.epfl.dbms;
 
-import sun.applet.Main;
-
 import javax.swing.*;
 import java.awt.*;
 import java.sql.ResultSet;
@@ -56,29 +54,35 @@ public class SearchUI {
 
                 System.out.println("Number of columns in Publication_series is " + numberColumns);
 
-                ResultSet resultSetColumn = null;
+                // for all the columns in the table
+                for(int i = 0; i < numberColumns; i++) {
+                    ResultSet resultSetColumn = null;
 
-                String query = "SELECT * FROM Publication_series WHERE Publication_series." + resultSetMetaData.getColumnName(1) + " = " + keywords;
+                    String query = "SELECT * FROM Publication_series WHERE Publication_series."
+                            + resultSetMetaData.getColumnName(i + 1) + " LIKE "
+                            + "'%" + keywords + "%'";
 
-                int type = resultSetMetaData.getColumnType( 1);
+                    //int type = resultSetMetaData.getColumnType(1);
 
-                if(isNumeric(keywords) && resultSetMetaData.getColumnType( 1) == Types.VARCHAR) {
-                    resultSetColumn = MainScreen.sqlProvider.query(
-                            query
-                    );
-                }
-
-                ResultSet resultSet1 = resultSetColumn;
-
-                if(resultSetColumn != null) {
-                    while (resultSetColumn.next()) {
-                        for (int k = 0; k < numberColumns; k++) {
-                            System.out.print(resultSetColumn.getString(k + 1) + " ");
-                        }
-                        System.out.println();
+                    if (resultSetMetaData.getColumnType(i + 1) == Types.VARCHAR) {
+                        resultSetColumn = MainScreen.sqlProvider.query(
+                                query
+                        );
                     }
-                } else {
-                    System.out.print("result set is null");
+
+                    //ResultSet resultSet1 = resultSetColumn;
+
+                    // display result
+                    if (resultSetColumn != null) {
+                        while (resultSetColumn.next()) {
+                            for (int k = 0; k < numberColumns; k++) {
+                                System.out.print(resultSetColumn.getString(k + 1) + " ");
+                            }
+                            System.out.println();
+                        }
+                    } else {
+                        System.out.print("result set is null");
+                    }
                 }
 
                 /**
