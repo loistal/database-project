@@ -18,6 +18,8 @@ public class DeleteUI {
     private JButton OKButton;
     private JButton OkButton2;
     private JButton OkButton3;
+    private JButton backButton;
+    private JButton backButton2;
     private String table = "";
     private String column = "";
     private ResultSetMetaData resultSetMetaData;
@@ -27,6 +29,8 @@ public class DeleteUI {
         columns.setEnabled(false);
         OKButton.setEnabled(false);
         OkButton3.setEnabled(false);
+        backButton.setEnabled(false);
+        backButton2.setEnabled(false);
         insertValueHereTextField.setEnabled(false);
 
         configureTableSpinner();
@@ -35,6 +39,8 @@ public class DeleteUI {
             configureDiscriminantSpinner();
         });
         OkButton3.addActionListener(e -> confirmColAndEnable());
+        backButton.addActionListener(e -> backAndDisable());
+        backButton2.addActionListener(e -> backAndDisable2());
         OKButton.addActionListener(e -> {
             try {
                 runQuery();
@@ -44,11 +50,30 @@ public class DeleteUI {
         });
     }
 
+    private void backAndDisable2() {
+        OKButton.setEnabled(false);
+        backButton2.setEnabled(false);
+        OkButton3.setEnabled(true);
+        backButton.setEnabled(true);
+        columns.setEnabled(true);
+        insertValueHereTextField.setEnabled(false);
+    }
+
+    private void backAndDisable() {
+        OkButton3.setEnabled(false);
+        backButton.setEnabled(false);
+        OkButton2.setEnabled(true);
+        tables.setEnabled(true);
+        columns.setEnabled(false);
+    }
+
     private void confirmTableAndEnable() {
         table = (String) tables.getValue();
         tables.setEnabled(false);
         columns.setEnabled(true);
         OkButton3.setEnabled(true);
+        backButton.setEnabled(true);
+        OkButton2.setEnabled(false);
 
     }
 
@@ -57,13 +82,32 @@ public class DeleteUI {
         columns.setEnabled(false);
         insertValueHereTextField.setEnabled(true);
         OKButton.setEnabled(true);
+        OkButton3.setEnabled(false);
+        backButton.setEnabled(false);
+        backButton2.setEnabled(true);
 
     }
 
     private void runQuery() throws SQLException {
         String delValue = insertValueHereTextField.getText();
         System.out.println(delValue);
-        if(delValue.equals("") || delValue.equals("Insert value here")) {
+        System.out.println(column);
+        if(table.equals("AUTHORS")) {
+            if(column.equals("BIRTHDATE") || column.equals("DEATHDATE")) {
+                String query = "DELETE " +
+                        "FROM " + table + " WHERE " + column + " = to_date('" + delValue + "', 'yyyy/mm/dd hh24:mi:ss')";
+
+                System.out.println(query);
+
+                int updatedRows = MainScreen.sqlProvider.update(query);
+
+                if(updatedRows == 0 || updatedRows == -1) {
+                    System.out.println("No rows updated " + updatedRows);
+                } else {
+                    System.out.println(updatedRows + " row(s) updated");
+                }
+            }
+        } else if(delValue.equals("") || delValue.equals("Insert value here")) {
             showErrorMsg();
         } else {
             String query = "DELETE " +
@@ -104,7 +148,7 @@ public class DeleteUI {
                 "REVIEWS",
                 "TAGS",
                 "TITLE",
-                "TITLE_AWARDS",
+                "TITLE_AWARD",
                 "TITLE_SERIES",
                 "TITLE_TAGS",
                 "WEB_PAGES"
@@ -119,8 +163,9 @@ public class DeleteUI {
         String query = "SELECT *" +
                 " FROM " + table;
 
+        ResultSet resultSet = MainScreen.sqlProvider.query(query);
+
         try {
-            ResultSet resultSet = MainScreen.sqlProvider.query(query);
 
             resultSetMetaData = resultSet.getMetaData();
             int numberOfColumns = resultSetMetaData.getColumnCount();
