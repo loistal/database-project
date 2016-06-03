@@ -119,9 +119,8 @@ public class DeleteUI {
         String query = "SELECT *" +
                 " FROM " + table;
 
-        ResultSet resultSet = MainScreen.sqlProvider.query(query);
-
         try {
+            ResultSet resultSet = MainScreen.sqlProvider.query(query);
 
             resultSetMetaData = resultSet.getMetaData();
             int numberOfColumns = resultSetMetaData.getColumnCount();

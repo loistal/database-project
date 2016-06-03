@@ -69,9 +69,8 @@ public class InsertUI {
         String query = "SELECT *" +
                 " FROM " + tableName;
 
-        ResultSet resultSet = MainScreen.sqlProvider.query(query);
-
         try {
+             ResultSet resultSet = MainScreen.sqlProvider.query(query);
 
             resultSetMetaData = resultSet.getMetaData();
             numberOfColumns = resultSetMetaData.getColumnCount();

@@ -29,18 +29,12 @@ public class SQLProvider {
         }
     }
 
-    public ResultSet query(String query) {
+    public ResultSet query(String query) throws SQLException {
         Statement stmt;
-        try {
-            stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = stmt.executeQuery(query);
-            return rs;
-        } catch (SQLException e) {
-            System.err.println("Invalid Query");
-            e.printStackTrace();
-        }
 
-        return null;
+        stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        ResultSet rs = stmt.executeQuery(query);
+        return rs;
     }
 
     /**

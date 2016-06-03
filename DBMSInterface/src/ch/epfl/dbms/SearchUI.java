@@ -44,30 +44,32 @@ public class SearchUI {
         // for each table
         for (int i = 0; i < MainScreen.tableNames.length; i++) {
 
-            // get number of columns
-            ResultSet resultSet = MainScreen.sqlProvider.query(
-
-
-                    "select count(*) from Publications "
-
-
-            );
-
-
-
-
             try {
-                boolean goFirstRowSuccess = resultSet.first();
+                // do a query to get the resultSet
+                ResultSet resultSet = MainScreen.sqlProvider.query(
+                        "select count(*) from " + MainScreen.tableNames[i]
+                );
 
-                if(!goFirstRowSuccess) {
-                    throw new SQLException("Could not move to the first row!");
+                ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+                int numberColumns = resultSetMetaData.getColumnCount();
+
+                try {
+                    // for each column of the table, look for the keywords
+                    for (int j = 0; j < numberColumns; j++) {
+
+                        ResultSet resultSetColumn = MainScreen.sqlProvider.query(
+                                "SELECT * FROM " + MainScreen.tableNames[i] + " WHERE "
+                                        + resultSetMetaData.getColumnName(j + 1) + " = " + keywords
+                        );
+
+                    }
+                } catch (SQLException e) {
+                    // The exceptions will be due to querying for keywords which don't
+                    // correspond the the type of that column.
+                    // In this case do nothing (could check type of input vs column type but
+                    // let's save time).
                 }
 
-                int numberColumns = resultSet.getInt("count(*)");
-
-                //debug
-                System.out.println("Number of columns: " + numberColumns);
-                
             } catch (SQLException e) {
                 e.printStackTrace();
             }
