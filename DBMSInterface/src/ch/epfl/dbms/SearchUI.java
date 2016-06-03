@@ -41,27 +41,44 @@ public class SearchUI {
      */
     private void search(String keywords) {
 
-        //for(int i = 0; i < MainScreen.tableNames.length; i++) {
+        // for each table
+        for (int i = 0; i < MainScreen.tableNames.length; i++) {
 
+            // get number of columns
             ResultSet resultSet = MainScreen.sqlProvider.query(
 
 
-                    "select count(*) from user_tab_columns where table_name='Publication_series' "
+                    "select count(*) from Publications "
 
 
             );
 
-        try {
-            int numberColumns = 0;
-            while(resultSet.next()){
-                //TODO: how to get number of columns?
-            }
-            System.out.println("Number of columns: " + numberColumns);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        //}
 
+
+
+            try {
+                boolean goFirstRowSuccess = resultSet.first();
+
+                if(!goFirstRowSuccess) {
+                    throw new SQLException("Could not move to the first row!");
+                }
+
+                int numberColumns = resultSet.getInt("count(*)");
+
+                //debug
+                System.out.println("Number of columns: " + numberColumns);
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
+
+    public static void main(String[] args) {
+        SearchUI.display();
     }
 
 

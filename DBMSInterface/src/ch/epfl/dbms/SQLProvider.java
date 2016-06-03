@@ -32,11 +32,12 @@ public class SQLProvider {
     public ResultSet query(String query) {
         Statement stmt;
         try {
-            stmt = connection.createStatement();
+            stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
             return rs;
         } catch (SQLException e) {
             System.err.println("Invalid Query");
+            e.printStackTrace();
         }
 
         return null;
