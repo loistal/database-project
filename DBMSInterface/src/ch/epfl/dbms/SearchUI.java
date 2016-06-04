@@ -78,7 +78,7 @@ public class SearchUI {
                             // First, add the table's name for clarity
                             row.add(MainScreen.tableNames[t]);
                             for (int k = 0; k < numberColumns; k++) {
-                                row.add(resultSetColumn.getString(k + 1));
+                                row.add(resultSetMetaData.getColumnName(k + 1) + ": " + resultSetColumn.getString(k + 1));
                             }
                             allResults.add(row);
                         }

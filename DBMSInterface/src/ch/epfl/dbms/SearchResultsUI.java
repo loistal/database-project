@@ -89,11 +89,20 @@ public class SearchResultsUI {
         ArrayList<String> row = allResults.get(rowIndex);
 
         newListModel.addElement("Details: ");
-        for(String field : row) {
-            newListModel.addElement(field);
+
+        // Blank line
+        newListModel.addElement("");
+
+        for(int i = 0; i < row.size(); i++) {
+            if(i == 0) {
+                newListModel.addElement(row.get(0));
+                newListModel.addElement("");
+            } else {
+                newListModel.addElement(row.get(i));
+            }
         }
 
-
+        // Change the listener so that nothing happens when clicking on the details
         listResults.addListSelectionListener(
                 e -> System.out.println("Selected element: " + listResults.getSelectedIndex())
         );
