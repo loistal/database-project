@@ -35,7 +35,6 @@ public class MainScreen {
             "TITLE_SERIES",
             "TITLE_TAGS",
             "WEB_PAGES"
-
     };
 
     public MainScreen() {
@@ -45,6 +44,7 @@ public class MainScreen {
         queriesButton.addActionListener(actionEvent -> QueryUI.display());
         insertButton.addActionListener(actionEvent -> InsertUI.display());
         searchButton.addActionListener(actionEvent -> SearchUI.display());
+        deleteButton.addActionListener(actionEvent -> DeleteUI.display());
     }
 
     public static void main(String[] args) {

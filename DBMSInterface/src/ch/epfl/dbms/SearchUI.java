@@ -13,6 +13,9 @@ import java.util.ArrayList;
  */
 public class SearchUI {
 
+    private ArrayList<ArrayList<String>> allResults;
+
+
     private JPanel mPanel;
     private JLabel searchTextLabel;
     private JTextField searchBox;
@@ -20,6 +23,7 @@ public class SearchUI {
 
     private SearchUI() {
 
+        allResults = new ArrayList<>();
         goButton.addActionListener(actionEvent -> search(searchBox.getText()));
 
     }
@@ -42,7 +46,7 @@ public class SearchUI {
     private void search(String keywords) {
 
         //for each table
-        for (int t = 0; t < MainScreen.tableNames.length; t++)
+        for (int t = 0; t < MainScreen.tableNames.length; t++) {
             try {
                 // Get number of columns
                 ResultSet resultSet = MainScreen.sqlProvider.query(
@@ -65,7 +69,6 @@ public class SearchUI {
                     }
 
                     // Save the results for later use
-                    ArrayList<ArrayList<String>> allResults = new ArrayList<>();
                     if (resultSetColumn != null) {
                         while (resultSetColumn.next()) {
                             ArrayList<String> row = new ArrayList<>();
@@ -76,44 +79,16 @@ public class SearchUI {
                         }
                     }
 
-                    // do stuff with results
-                    for(ArrayList<String> row: allResults) {
-                        System.out.println(row);
-                    }
 
                 }
 
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-    }
-
-    /**
-     * Used to test whether the input provided in the search box is a number
-     * @param str The string to be tested
-     * @return Whether or not the string is a number
-     */
-    public static boolean isNumeric(String str)
-    {
-        try
-        {
-            Double.parseDouble(str);
         }
-        catch(NumberFormatException nfe)
-        {
-            return false;
-        }
-        return true;
+
+        // do stuff with results
+        SearchResultsUI.display(allResults, keywords);
     }
-
-
-    public static void main(String[] args) {
-        SearchUI.display();
-    }
-
-
-
-
-
 
 }
