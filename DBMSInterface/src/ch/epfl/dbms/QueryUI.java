@@ -17,14 +17,59 @@ public class QueryUI {
     private JScrollPane resultsContainer;
     private JTextField searchBox;
     private JButton searchButton;
+    private JSpinner querySpinner;
     private DefaultTableModel table_model;
     private TableRowSorter sorter;
     private SQLProvider sp;
+    private String[] queries = {"SELECT authors_number_publications.a_name\n" +
+            "FROM (\n" +
+            "    SELECT Authors.author_id, Authors.a_name, COUNT(*) as pubs\n" +
+            "    FROM Authors, Publications, Publication_authors\n" +
+            "    WHERE Publication_authors.author_id = Authors.author_id AND\n" +
+            "          Publication_authors.publication_id = Publications.publication_id\n" +
+            "    GROUP BY Authors.author_id, Authors.a_name\n" +
+            "    ORDER BY pubs DESC\n" +
+            ") authors_number_publications\n" +
+            "WHERE ROWNUM <= 10",
+
+            "SELECT Authors.a_name\n" +
+            "FROM Authors\n" +
+            "WHERE Authors.birthdate IN (\n" +
+            "        SELECT MAX(Authors.birthdate)\n" +
+            "        FROM Authors, Publications, Publication_authors\n" +
+            "        WHERE Publication_authors.author_id = Authors.author_id AND\n" +
+            "        Publication_authors.publication_id = Publications.publication_id AND\n" +
+            "        EXTRACT (YEAR FROM Publications.publication_date) = 2010\n" +
+            "\n" +
+            "    ) OR\n" +
+            "    Authors.birthdate IN (\n" +
+            "      SELECT MIN(Authors.birthdate)\n" +
+            "        FROM Authors, Publications, Publication_authors\n" +
+            "        WHERE Publication_authors.author_id = Authors.author_id AND\n" +
+            "        Publication_authors.publication_id = Publications.publication_id AND\n" +
+            "        EXTRACT (YEAR FROM Publications.publication_date) = 2010\n" +
+            ")"};
 
     public QueryUI() {
         sp = new SQLProvider();
+        setSpinner();
         executeButton.addActionListener(actionEvent -> {
-            String query = queryField.getText();
+            String choice = (String) querySpinner.getValue();
+            String query = "";
+
+            switch(choice) {
+                case "Number of Publications per year":
+                    query = queries[0];
+                    break;
+
+                case "Ten authors with most publications":
+                    query = queries[1];
+                    break;
+
+                default:
+                    break;
+
+            }
 
             if (!query.isEmpty()) {
                 searchButton.setEnabled(false);
@@ -46,6 +91,20 @@ public class QueryUI {
                 sorter.setRowFilter(RowFilter.regexFilter(search));
             }
         });
+    }
+
+
+    private void setSpinner() {
+        String[] tableNames = {
+                "Number of Publications per year",
+                "Ten authors with most publications",
+                "Names of the youngest and oldest authors to publish something in 2010",
+                "Comics whith publications with less than 50 pages, less than 100 pages, and more (or equal) than 100 pages?"
+        };
+
+
+        SpinnerListModel tableModel = new SpinnerListModel(tableNames);
+        querySpinner.setModel(tableModel);
     }
 
     private void populateResultsTable(ResultSet rs) throws SQLException {

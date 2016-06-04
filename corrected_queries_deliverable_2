@@ -101,9 +101,9 @@ WHERE ROWNUM = 1;
 SELECT num_awards.title_id , num_awards + num_reviews
 FROM
   (
-    SELECT Title.title_id, COUNT(Title_awards.award_id) as num_awards
-    FROM Title, Title_awards
-    WHERE Title.title_id = Title_awards.title_id
+    SELECT Title.title_id, COUNT(Title_award.award_id) as num_awards
+    FROM Title, Title_award
+    WHERE Title.title_id = Title_award.title_id
     GROUP BY Title.title_id
   ) num_awards,
   (

@@ -26,11 +26,11 @@ GROUP BY mPublications.price_currency;
 -- tested with sql developer
 SELECT *
 FROM (
-  SELECT Title_series.id, COUNT(Title_awards.AWARD_ID) AS number_awards
-  FROM Title_series, Title_awards, Title
+  SELECT Title_series.title, COUNT(Title_award.AWARD_ID) AS number_awards
+  FROM Title_series, Title_award, Title
   WHERE Title.series_id = Title_series.id AND
-        Title_awards.title_id = Title.title_id
-  GROUP BY Title_series.id
+        Title_award.title_id = Title.title_id
+  GROUP BY Title_series.title
   ORDER BY number_awards DESC
 )
 WHERE ROWNUM <= 10;
@@ -40,12 +40,12 @@ WHERE ROWNUM <= 10;
 SELECT *
 FROM (
 SELECT Authors.a_name, COUNT(Awards.award_id) AS number_awards
-FROM Authors, Awards, Title_awards, Title, Publication_content, Publications, Publication_authors
+FROM Authors, Awards, Title_award, Title, Publication_content, Publications, Publication_authors
 WHERE Publication_content.publication_id = Publications.publication_id AND
       Publication_content.title_id = Title.title_id AND
       Publication_authors.author_id = Authors.author_id AND
       Publication_authors.publication_id = Publications.publication_id AND
-      Title_awards.title_id = Title.title_id AND
+      Title_award.title_id = Title.title_id AND
       Awards.AWARD_DATE >= Authors.DEATHDATE
 GROUP BY Authors.a_name
 ORDER BY number_awards DESC
@@ -70,7 +70,8 @@ WHERE ROWNUM <= 3;
 -- query e: Given an author, compute his/her most reviewed title(s).
 -- tested with sql developer
 -- note: replace the hardcoded author name with the desired one
--- note 2: it is normal that some authors have no titles which have been reviewed
+SELECT *
+FROM (
 SELECT Title.title, COUNT(Reviews.title_id) as number_reviews
 FROM Title, Reviews, Publications, Publication_authors, Authors, Publication_content
 WHERE Authors.a_name = 'H. G. Wells' AND
@@ -80,7 +81,8 @@ WHERE Authors.a_name = 'H. G. Wells' AND
       Publication_content.title_id = Title.TITLE_ID AND
       Publication_content.publication_id = Publications.PUBLICATION_ID
 GROUP BY Title.title
-ORDER BY number_reviews DESC;
+ORDER BY number_reviews DESC
+) WHERE ROWNUM = 2;
 
 -- query f) For every language, find the top three title types with most translations.
 -- note: no synthax errors but never returns
@@ -122,13 +124,13 @@ ORDER BY Publications.publication_date;
 SELECT *
 FROM(
       SELECT Publication_series.ps_id, COUNT(Publications.publication_id) as number_publications_with_award
-      FROM Publication_series, Publications, Awards, Title, Title_awards, Publication_content
+      FROM Publication_series, Publications, Awards, Title, Title_award, Publication_content
       WHERE Publications.PUBLICATIOM_SERIES_ID = Publication_series.PS_ID AND
             Publications.publication_id = Publication_content.publication_id AND
             Title.title_id = Publication_content.title_id AND
-            Title_awards.title_id = Title.title_id AND
+            Title_award.title_id = Title.title_id AND
             Awards.AWARD_TITLE LIKE '%World Fantasy Award%' AND
-            Awards.AWARD_ID = Title_awards.AWARD_ID
+            Awards.AWARD_ID = Title_award.AWARD_ID
       GROUP BY Publication_series.ps_id
       ORDER BY number_publications_with_award
 )
@@ -151,10 +153,10 @@ WHERE Authors.author_id IN (
    FROM (
      -- Number of awards per author for the given category
      SELECT Authors.author_id, COUNT(Awards.award_id) as number_awards
-      FROM Authors, Awards, Title_awards, Title, Publications, Publication_authors, Publication_content
+      FROM Authors, Awards, Title_award, Title, Publications, Publication_authors, Publication_content
       WHERE Awards.award_category_id = mAwardCategory.ac_id AND
-            Title_awards.title_id = Title.title_id AND
-            Title_awards.award_id = Awards.award_id AND
+            Title_award.title_id = Title.title_id AND
+            Title_award.award_id = Awards.award_id AND
             Publication_content.publication_id = Publications.publication_id AND
             Publication_content.title_id = Title.title_id AND
             Publication_authors.publication_id = Publications.publication_id AND
@@ -173,7 +175,8 @@ WHERE Authors.author_id IN (
 -- note: The inner query needs to select the birthdate too, otherwise the order
 -- by can not be performed correctly because of the DISTINCT( there will be a problem with several
 -- authors having the same name, but different birthdates ).
-SELECT Authors.a_name
+-- changed Authors.a_name to a_name because sql developer gave error otherwise
+SELECT a_name
 FROM (
     SELECT DISTINCT Authors.a_name, Authors.birthdate
     FROM Authors, Publications, Publication_authors, Title, Publication_content
@@ -250,12 +253,12 @@ WHERE ROWNUM <= 10;
 SELECT *
 FROM (
   SELECT Publications.publication_id, COUNT(Web_pages.wp_id) AS web_presence
-  FROM Publications, Awards, Title, Web_pages, Title_awards, Publication_content, Publication_authors, Title_series, Publication_series, Publisher, Authors
+  FROM Publications, Awards, Title, Web_pages, Title_award, Publication_content, Publication_authors, Title_series, Publication_series, Publisher, Authors
   WHERE -- Publications with the Nebula award
         Publication_content.publication_id = Publications.publication_id AND
         Publication_content.title_id = Title.title_id AND
-        Title_awards.title_id = Title.title_id AND
-        Title_awards.award_id = Awards.award_id AND
+        Title_award.title_id = Title.title_id AND
+        Title_award.award_id = Awards.award_id AND
         Awards.award_title = '%Nebula%' AND (
 
           --webpage with the author of that publication
