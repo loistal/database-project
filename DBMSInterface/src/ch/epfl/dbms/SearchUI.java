@@ -1,5 +1,7 @@
 package ch.epfl.dbms;
 
+import sun.applet.Main;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.ResultSet;
@@ -72,6 +74,9 @@ public class SearchUI {
                     if (resultSetColumn != null) {
                         while (resultSetColumn.next()) {
                             ArrayList<String> row = new ArrayList<>();
+
+                            // First, add the table's name for clarity
+                            row.add(MainScreen.tableNames[t]);
                             for (int k = 0; k < numberColumns; k++) {
                                 row.add(resultSetColumn.getString(k + 1));
                             }
