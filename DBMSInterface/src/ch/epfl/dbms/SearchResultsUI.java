@@ -15,6 +15,8 @@ public class SearchResultsUI {
     private ArrayList<ArrayList<String>> allResults;
     private String keywords;
 
+    private boolean detailsMode = false;
+
     private SearchResultsUI(ArrayList<ArrayList<String>> allResults, String keywords) {
 
         listResults = new JList();
@@ -26,7 +28,7 @@ public class SearchResultsUI {
     }
 
     static void display(ArrayList<ArrayList<String>> allResults, String keywords) {
-        JFrame frame = new JFrame("Search previews");
+        JFrame frame = new JFrame("Search results");
         SearchResultsUI searchResultsUI = new SearchResultsUI(allResults, keywords);
         frame.setContentPane(searchResultsUI.mPanel);
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -38,6 +40,10 @@ public class SearchResultsUI {
 
     private void populateList() {
         DefaultListModel listModel = new DefaultListModel();
+
+        if(allResults.size() == 0) {
+            listModel.addElement("No results for the given keywords");
+        }
 
         for(int i = 0; i < allResults.size(); i++) {
             for(int j = 0; j < allResults.get(i).size(); j++) {
@@ -52,17 +58,47 @@ public class SearchResultsUI {
                             field = field.concat(" ...");
                         }
                         listModel.addElement(field);
+                        break; // Do not test the other fields of the same row. We only want 1 preview per row.
                     }
                 }
 
             }
         }
 
-        System.out.print("Finished double loop");
-
         listResults.setModel(listModel);
 
         scrollPane.setViewportView(listResults);
+
+        System.out.println(listModel.size());
+        System.out.println(allResults.size());
+
+        listResults.addListSelectionListener(
+                e -> {
+                    if (!detailsMode)
+                        displayRowInformation(listResults.getSelectedIndex());
+                }
+        );
+
+    }
+
+    private void displayRowInformation(int rowIndex) {
+
+        detailsMode = true;
+        DefaultListModel newListModel = new DefaultListModel();
+
+        ArrayList<String> row = allResults.get(rowIndex);
+
+        newListModel.addElement("Details: ");
+        for(String field : row) {
+            newListModel.addElement(field);
+        }
+
+
+        listResults.addListSelectionListener(
+                e -> System.out.println("Selected element: " + listResults.getSelectedIndex())
+        );
+        listResults.setModel(newListModel);
+
     }
 
 }
