@@ -1,7 +1,5 @@
 package ch.epfl.dbms;
 
-import sun.applet.Main;
-
 import javax.swing.*;
 import java.awt.*;
 import java.sql.ResultSet;
@@ -27,6 +25,7 @@ public class SearchUI {
 
         allResults = new ArrayList<>();
         goButton.addActionListener(actionEvent -> search(searchBox.getText()));
+
 
     }
 
@@ -95,5 +94,6 @@ public class SearchUI {
         // do stuff with results
         SearchResultsUI.display(allResults, keywords);
     }
+
 
 }

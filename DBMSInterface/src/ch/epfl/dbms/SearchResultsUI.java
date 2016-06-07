@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class SearchResultsUI {
     private JPanel mPanel;
     private JScrollPane scrollPane;
+    private JLabel followUpSearchInstructionLabel;
     private JList listResults;
 
     private ArrayList<ArrayList<String>> allResults;
