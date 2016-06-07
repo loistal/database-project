@@ -105,7 +105,12 @@ public class SearchResultsUI {
 
         // Change the listener so that nothing happens when clicking on the details
         listResults.addListSelectionListener(
-                e -> System.out.println("Selected element: " + listResults.getSelectedIndex())
+                e -> {
+                    if(detailsMode) {
+                        String selectedValue = listResults.getSelectedValue().toString();
+                        System.out.println(selectedValue);
+                    }
+                }
         );
         listResults.setModel(newListModel);
 

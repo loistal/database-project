@@ -38,9 +38,6 @@ public class MainScreen {
             "WEB_PAGES"
     };
 
-    // Used for follow-up search in searchUI
-    static HashMap<String, String> keys;
-
     public MainScreen() {
 
         sqlProvider = new SQLProvider();
@@ -49,26 +46,6 @@ public class MainScreen {
         insertButton.addActionListener(actionEvent -> InsertUI.display());
         searchButton.addActionListener(actionEvent -> SearchUI.display());
         deleteButton.addActionListener(actionEvent -> DeleteUI.display());
-
-        keys = new HashMap<>();
-        keys.put("AUTHORS", "AUTHOR_ID");
-        keys.put("AWARD_CATEGORIES", "AC_ID");
-        keys.put("AWARD_TYPES", "AT_ID");
-        keys.put("AWARDS", "AWARD_ID");
-        keys.put("LANGUAGES", "LANGUAGE_ID");
-        keys.put("NOTES", "NOTE_ID");
-        keys.put("PUBLICATION_AUTHORS", "PA_ID");
-        keys.put("PUBLICATION_CONTENT", "PUBC_ID");
-        keys.put("PUBLICATION_SERIES", "PS_ID");
-        keys.put("PUBLICATIONS", "PUBLICATION_ID");
-        keys.put("PUBLISHER", "PUBLISHER_ID");
-        keys.put("REVIEWS", "ID");
-        keys.put("TAGS", "TAG_ID");
-        keys.put("TITLE", "TITLE_ID");
-        keys.put("TITLE_AWARD", "TAW_ID");
-        keys.put("TITLE_SERIES", "ID");
-        keys.put("TITLE_TAGS", "TAGMAP_ID");
-        keys.put("WEB_PAGES", "WB_ID");
 
     }
 
