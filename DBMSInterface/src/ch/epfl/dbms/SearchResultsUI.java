@@ -103,12 +103,16 @@ public class SearchResultsUI {
             }
         }
 
-        // Change the listener so that nothing happens when clicking on the details
         listResults.addListSelectionListener(
                 e -> {
-                    if(detailsMode) {
+                    if(detailsMode && listResults.getSelectedIndex() >= 2) {
                         String selectedValue = listResults.getSelectedValue().toString();
-                        System.out.println(selectedValue);
+                        int startingIndex = selectedValue.indexOf(":");
+                        String keyword = selectedValue.substring(startingIndex + 2);
+
+                        if(keyword != "null") {
+                            new SearchUI(keyword);
+                        }
                     }
                 }
         );

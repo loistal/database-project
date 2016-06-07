@@ -21,11 +21,17 @@ public class SearchUI {
     private JTextField searchBox;
     private JButton goButton;
 
+    public SearchUI(String keyword) {
+
+        allResults = new ArrayList<>();
+        search(keyword);
+
+    }
+
     private SearchUI() {
 
         allResults = new ArrayList<>();
         goButton.addActionListener(actionEvent -> search(searchBox.getText()));
-
 
     }
 
