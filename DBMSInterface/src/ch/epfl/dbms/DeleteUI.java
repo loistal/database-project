@@ -10,7 +10,7 @@ import java.sql.Statement;
 /**
  * Created by Gianni on 01.06.2016.
  */
-public class DeleteUI {
+public class DeleteUI  extends JFrame{
     private JPanel mPanel;
     private JSpinner tables;
     private JSpinner columns;
@@ -90,21 +90,26 @@ public class DeleteUI {
 
     private void runQuery() throws SQLException {
         String delValue = insertValueHereTextField.getText();
-        System.out.println(delValue);
         System.out.println(column);
         if(table.equals("AUTHORS")) {
-            if(column.equals("BIRTHDATE") || column.equals("DEATHDATE")) {
-                String query = "DELETE " +
-                        "FROM " + table + " WHERE " + column + " = to_date('" + delValue + "', 'yyyy/mm/dd hh24:mi:ss')";
+            if(delValue.equals("") || delValue.equals("Insert value here")) {
+                showErrorMsg();
+            } else {
+                if(column.equals("BIRTHDATE") || column.equals("DEATHDATE")) {
+                    if(delValue.equals("") || delValue.equals("Insert value here")) {
+                        showErrorMsg();
+                    } else {
+                        String query = "DELETE " +
+                                "FROM " + table + " WHERE " + column + " = to_date('" + delValue + "', 'yyyy/mm/dd hh24:mi:ss')";
 
-                System.out.println(query);
+                        int updatedRows = MainScreen.sqlProvider.update(query);
 
-                int updatedRows = MainScreen.sqlProvider.update(query);
-
-                if(updatedRows == 0 || updatedRows == -1) {
-                    System.out.println("No rows updated " + updatedRows);
-                } else {
-                    System.out.println(updatedRows + " row(s) updated");
+                        if (updatedRows == 0 || updatedRows == -1) {
+                            System.out.println("No rows updated " + updatedRows);
+                        } else {
+                            System.out.println(updatedRows + " row(s) updated");
+                        }
+                    }
                 }
             }
         } else if(delValue.equals("") || delValue.equals("Insert value here")) {
@@ -121,15 +126,26 @@ public class DeleteUI {
 
             if(updatedRows == 0 || updatedRows == -1) {
                 System.out.println("No rows updated " + updatedRows);
+                showNoUpdate();
             } else {
+                showSuccess();
                 System.out.println(updatedRows + " row(s) updated");
             }
         }
 
     }
 
+    private void showSuccess() {
+        MessageWindow.display(true);
+    }
+
+    private void showNoUpdate() {
+        MessageWindow.display(false);
+    }
+
     private void showErrorMsg() {
-        //TODO
+        System.out.println("In show error");
+        Error.display();
     }
 
     private void configureTableSpinner() {
@@ -163,8 +179,9 @@ public class DeleteUI {
         String query = "SELECT *" +
                 " FROM " + table;
 
+        ResultSet resultSet = MainScreen.sqlProvider.query(query);
+
         try {
-            ResultSet resultSet = MainScreen.sqlProvider.query(query);
 
             resultSetMetaData = resultSet.getMetaData();
             int numberOfColumns = resultSetMetaData.getColumnCount();
