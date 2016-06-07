@@ -89,7 +89,6 @@ public class SearchUI {
                         }
                     }
 
-
                 }
 
             } catch (SQLException e) {
