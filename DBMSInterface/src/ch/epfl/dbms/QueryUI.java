@@ -21,34 +21,9 @@ public class QueryUI {
     private DefaultTableModel table_model;
     private TableRowSorter sorter;
     private SQLProvider sp;
-    private String[] queries = {"SELECT authors_number_publications.a_name\n" +
-            "FROM (\n" +
-            "    SELECT Authors.author_id, Authors.a_name, COUNT(*) as pubs\n" +
-            "    FROM Authors, Publications, Publication_authors\n" +
-            "    WHERE Publication_authors.author_id = Authors.author_id AND\n" +
-            "          Publication_authors.publication_id = Publications.publication_id\n" +
-            "    GROUP BY Authors.author_id, Authors.a_name\n" +
-            "    ORDER BY pubs DESC\n" +
-            ") authors_number_publications\n" +
-            "WHERE ROWNUM <= 10",
-
-            "SELECT Authors.a_name\n" +
-            "FROM Authors\n" +
-            "WHERE Authors.birthdate IN (\n" +
-            "        SELECT MAX(Authors.birthdate)\n" +
-            "        FROM Authors, Publications, Publication_authors\n" +
-            "        WHERE Publication_authors.author_id = Authors.author_id AND\n" +
-            "        Publication_authors.publication_id = Publications.publication_id AND\n" +
-            "        EXTRACT (YEAR FROM Publications.publication_date) = 2010\n" +
-            "\n" +
-            "    ) OR\n" +
-            "    Authors.birthdate IN (\n" +
-            "      SELECT MIN(Authors.birthdate)\n" +
-            "        FROM Authors, Publications, Publication_authors\n" +
-            "        WHERE Publication_authors.author_id = Authors.author_id AND\n" +
-            "        Publication_authors.publication_id = Publications.publication_id AND\n" +
-            "        EXTRACT (YEAR FROM Publications.publication_date) = 2010\n" +
-            ")"};
+    private Query query = new Query();
+    private String[] tableNames = query.getDescription();
+    private String[] queries = query.getQueries();
 
     public QueryUI() {
         sp = new SQLProvider();
@@ -66,8 +41,117 @@ public class QueryUI {
                     query = queries[1];
                     break;
 
+                case "Names of the youngest and oldest authors to publish something in 2010":
+                    query = queries[2];
+                    break;
+
+
+                case "Comics with publications with less than 50 pages":
+                    query = queries[3];
+                    break;
+
+
+                case "Comics with publications with less than 100 pages":
+                    query = queries[4];
+                    break;
+
+                case "Comics with publications with more (or equal) than 100 pages":
+                    query = queries[5];
+                    break;
+
+
+                case "Average price of Author's published novels (the ones that have a dollar price)":
+                    query = queries[6];
+                    break;
+
+
+                case "Name of the author with the highest number of titles tagged as science fiction":
+                    query = queries[7];
+                    break;
+
+                case "Three most popular titles":
+                    query = queries[8];
+                    break;
+
+                case "Average price per currency of the publications of the most popular title":
+                    query = queries[9];
+                    break;
+
+
+                case "Names of the top ten title series with most awards":
+                    query = queries[10];
+                    break;
+
+
+                case "Name of the author who has received the most awards after his/her death":
+                    query = queries[11];
+                    break;
+
+
+                case "Three publishers that published the most publications for a given year":
+                    //choose the year
+                    query = queries[12];
+                    break;
+
+
+                case "Most reviewed title for a given author":
+                    //choose author
+                    query = queries[13];
+                    break;
+
+
+                case "Top three title types with most translations for every language":
+                    query = queries[14];
+                    break;
+
+
+                case "Average number of authors per publisher for each year":
+                    query = queries[15];
+                    break;
+
+
+
+                case "Publication series with most titles that have been given awards of “World Fantasy Award” type":
+                    query = queries[16];
+                    break;
+
+
+
+                case "Names of the three most awarded authors for every award category":
+                    query = queries[17];
+                    break;
+
+
+
+                case "Names of all living authors that have published at least one anthology from youngest to oldest.":
+                    query = queries[18];
+                    break;
+
+
+                case "Author who has reviewed the most titles.":
+                    query = queries[19];
+                    break;
+
+
+                case "Three authors with the most translated titles of “novel” type for every language":
+                    query = queries[20];
+                    break;
+
+
+                case "Top ten authors whose publications have  the largest pages per dollar ratio":
+                    query = queries[21];
+                    break;
+
+
+                case "Top 10 publications that have been awarded the Nebula award with the most extensive web presence":
+                    query = queries[22];
+                    break;
+
+
+
                 default:
                     break;
+
 
             }
 
@@ -95,14 +179,6 @@ public class QueryUI {
 
 
     private void setSpinner() {
-        String[] tableNames = {
-                "Number of Publications per year",
-                "Ten authors with most publications",
-                "Names of the youngest and oldest authors to publish something in 2010",
-                "Comics whith publications with less than 50 pages, less than 100 pages, and more (or equal) than 100 pages?"
-        };
-
-
         SpinnerListModel tableModel = new SpinnerListModel(tableNames);
         querySpinner.setModel(tableModel);
     }
@@ -133,6 +209,7 @@ public class QueryUI {
 
         searchBox.setEnabled(true);
         searchButton.setEnabled(true);
+        System.out.println("DONE");
 
     }
 
