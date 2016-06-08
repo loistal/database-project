@@ -7,7 +7,7 @@ import javax.swing.table.TableRowSorter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class QueryUI {
+public class QueryUI extends JFrame{
 
     private JPanel mainPanel;
     private JTextField queryField;
@@ -24,6 +24,7 @@ public class QueryUI {
     private Query query = new Query();
     private String[] tableNames = query.getDescription();
     private String[] queries = query.getQueries();
+    private ChooseUI chooseUI;
 
     public QueryUI() {
         sp = new SQLProvider();
@@ -60,7 +61,7 @@ public class QueryUI {
                     break;
 
 
-                case "Average price of Author's published novels (the ones that have a dollar price)":
+                case "Average price of Author's published novels (the ones that have a dollar price":
                     query = queries[6];
                     break;
 
@@ -89,14 +90,39 @@ public class QueryUI {
 
 
                 case "Three publishers that published the most publications for a given year":
-                    //choose the year
-                    query = queries[12];
+                    chooseUI = new ChooseUI(true);
+                    String year = chooseUI.getValue();
+                    query = "SELECT *\n" +
+                            "FROM (\n" +
+                            "  SELECT Publisher.PUBLISHER_ID, COUNT(Publications.publication_id) as number_publications\n" +
+                            "  FROM Publications, Publisher\n" +
+                            "  WHERE EXTRACT ( YEAR FROM Publications.publication_date ) = "+year+" AND\n" +
+                            "        Publications.publisher_id = Publisher.publisher_id\n" +
+                            "  GROUP BY Publisher.publisher_id\n" +
+                            "  ORDER BY number_publications DESC\n" +
+                            ")\n" +
+                            "WHERE ROWNUM <= 3";
+
                     break;
 
 
+
                 case "Most reviewed title for a given author":
-                    //choose author
-                    query = queries[13];
+                    chooseUI = new ChooseUI(false);
+                    String name = chooseUI.getValue();
+                    query = "SELECT *\n" +
+                            "FROM (\n" +
+                            "SELECT Title.title, COUNT(Reviews.title_id) as number_reviews\n" +
+                            "FROM Title, Reviews, Publications, Publication_authors, Authors, Publication_content\n" +
+                            "WHERE Authors.a_name = '"+name+"' AND\n" +
+                            "      Reviews.title_id = Title.title_id AND\n" +
+                            "      Publication_authors.publication_id = Publications.publication_id AND\n" +
+                            "      Publication_authors.AUTHOR_ID = Authors.author_id AND\n" +
+                            "      Publication_content.title_id = Title.TITLE_ID AND\n" +
+                            "      Publication_content.publication_id = Publications.PUBLICATION_ID\n" +
+                            "GROUP BY Title.title\n" +
+                            "ORDER BY number_reviews DESC\n" +
+                            ") WHERE ROWNUM = 2";
                     break;
 
 
